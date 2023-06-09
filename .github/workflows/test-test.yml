@@ -16,7 +16,7 @@ jobs:
 
     - name: Check secrets
       run: |
-        if [[ "${{ env.GH_TOKEN }}" == "" ]]; then
+        if [[ "${{ vars.GH_TOKEN }}" == "" ]]; then
           echo "Secret is not available. Skipping..."
           exit 0
         else

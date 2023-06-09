@@ -9,6 +9,7 @@ One place that allows you to develop an AsyncAPI document, validate it, convert 
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 New line
+1
 
 ## :loudspeaker: ATTENTION:
 

@@ -40,7 +40,7 @@ jobs:
         run: npm install
       - name: Check secrets
         run: |
-          if [[ "${{ vars.GH_TOKEN }}" == "" ]]; then
+          if [[ "${{ secrets.GH_TOKEN }}" == "" ]]; then
             echo "Secret is not available. Skipping..."
             exit 0
           else
@@ -50,8 +50,8 @@ jobs:
         name: Publish to any of NPM, Github, and Docker Hub
         id: release
         env:
-          GITHUB_TOKEN: ${{ vars.GH_TOKEN }}
-          NPM_TOKEN: ${{ vars.NPM_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
           GIT_AUTHOR_NAME: KhudaDad414

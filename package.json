@@ -3,7 +3,8 @@
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
-    "release": "turbo run release"
+    "release": "turbo run release",
+    "test": "turbo run test"
   },
   "devDependencies": {
     "semantic-release": "^21.0.3",

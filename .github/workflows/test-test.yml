@@ -1,0 +1,24 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Check secrets
+      run: |
+        if [[ -z "${{ secrets.GH_TOKEN }}" ]]; then
+          echo "Secret is missing. Failing..."
+          exit 1
+        else
+          echo "Secret is available."
+        fi

@@ -62,7 +62,7 @@
     "generate:assets": "npm run build && npm run generate:readme:toc",
     "generate:template-parameters": "ts-node ./scripts/template-parameters.ts",
     "generate:docker": "docker build --tag asyncapi/studio .",
-    "bump:version": "npm --no-git-tag-version --allow-same-version version $VERSION",
+    "bump:version": "./bump-version.sh",
     "release": "semantic-release -e semantic-release-monorepo",
     "prepublishOnly": "npm run build && npm run generate:readme:toc"
   },

@@ -46,8 +46,8 @@ jobs:
         with:
           token: ${{ secrets.GH_TOKEN }}
           commit-message: 'chore(release): ${{github.event.release.tag_name}}'
-          committer: asyncapi-bot <info@asyncapi.io>
-          author: asyncapi-bot <info@asyncapi.io>
+          committer: KhudaDad414
+          author: KhudaDad414
           title: 'chore(release): ${{github.event.release.tag_name}}'
           body: 'Version bump in package.json for release [${{github.event.release.tag_name}}](${{github.event.release.html_url}})'
           branch: version-bump/${{github.event.release.tag_name}}

@@ -13,7 +13,7 @@
     "release": "npm run generate:docker && semantic-release",
     "test": "turbo run test",
     "bump:version": "turbo run bump:version",
-    "generate:docker": "docker build -f Dockerfile --tag asyncapi/studio .",
+    "generate:docker": "docker build -f Dockerfile --tag khudadad414/studio .",
     "build:studio": "turbo run build --no-cache --filter=studio...",
     "build:ds": "turbo run build --filter=design-system..."
   },

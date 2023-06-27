@@ -21,8 +21,7 @@ jobs:
     # We just check the message of first commit as there is always just one commit because we squash into one before merging
     # "commits" contains array of objects where one of the properties is commit "message"
     # Release workflow will be skipped if release conventional commits are not used
-    if: |
-      startsWith( github.repository, 'asyncapi/' ) && 
+    if: | 
       (startsWith( github.event.commits[0].message , 'fix:' ) ||
       startsWith( github.event.commits[0].message, 'fix!:' ) ||
       startsWith( github.event.commits[0].message, 'feat:' ) ||

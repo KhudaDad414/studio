@@ -20,5 +20,5 @@ plugins:
   - preset: conventionalcommits
 - "@semantic-release/github"
 - - "@semantic-release-plus/docker"
-  - name: asyncapi/studio
+  - name: khudadad414/studio
     publishChannelTag: true

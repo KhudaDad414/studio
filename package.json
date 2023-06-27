@@ -1,5 +1,6 @@
 {
   "private": true,
+  "version": "0.19.0",
   "repository": {
     "type": "git",
     "url": "git://github.com/asyncapi/studio.git"
@@ -9,9 +10,10 @@
     "ds": "turbo run dev --no-cache --continue --filter=design-system...",
     "studio": "turbo run dev --filter=studio...",
     "build": "turbo run build",
-    "release": "turbo run release",
+    "release": "npm run generate:docker && semantic-release",
     "test": "turbo run test",
     "bump:version": "turbo run bump:version",
+    "generate:docker": "docker build -f Dockerfile --tag asyncapi/studio .",
     "build:studio": "turbo run build --no-cache --filter=studio...",
     "build:ds": "turbo run build --filter=design-system..."
   },

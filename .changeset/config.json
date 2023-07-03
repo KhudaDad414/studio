@@ -7,5 +7,9 @@
   "access": "restricted",
   "baseBranch": "master",
   "updateInternalDependencies": "patch",
-  "ignore": ["design-system"]
+  "ignore": ["design-system"],
+  "privatePackages": {
+    "version": true,
+    "tag": true
+  }
 }

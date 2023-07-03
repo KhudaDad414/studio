@@ -58,8 +58,7 @@
     "generate:assets": "npm run build && npm run generate:readme:toc",
     "generate:template-parameters": "ts-node ./scripts/template-parameters.ts",
     "generate:docker": "docker build -f Dockerfile --tag asyncapi/studio ../../",
-    "bump:version": "../../bump-version.sh @asyncapi/studio",
-    "release": "npm run generate:docker && semantic-release -e semantic-release-monorepo",
+    "release": "npm run generate:docker && semantic-release",
     "prepublishOnly": "npm run build && npm run generate:readme:toc"
   },
   "browserslist": {
@@ -142,23 +141,11 @@
       "master"
     ],
     "plugins": [
-      [
-        "@semantic-release/commit-analyzer",
-        {
-          "preset": "conventionalcommits"
-        }
-      ],
-      [
-        "@semantic-release/release-notes-generator",
-        {
-          "preset": "conventionalcommits"
-        }
-      ],
       "@semantic-release/github",
       [
         "@semantic-release-plus/docker",
         {
-          "name": "asyncapi/studio",
+          "name": "khudadad414/studio",
           "publishChannelTag": true
         }
       ]

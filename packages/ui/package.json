@@ -15,8 +15,7 @@
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
-    "bump:version": "../../bump-version.sh ui",
-    "release": "semantic-release -e semantic-release-monorepo",
+    "publish": "semantic-release",
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
@@ -46,18 +45,6 @@
       "master"
     ],
     "plugins": [
-      [
-        "@semantic-release/commit-analyzer",
-        {
-          "preset": "conventionalcommits"
-        }
-      ],
-      [
-        "@semantic-release/release-notes-generator",
-        {
-          "preset": "conventionalcommits"
-        }
-      ],
       "@semantic-release/github"
     ]
   }

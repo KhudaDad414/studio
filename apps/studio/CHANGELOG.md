@@ -1,5 +1,11 @@
 # @asyncapi/studio
 
+## 1.4.0
+
+### Minor Changes
+
+- 27ef932: hi
+
 ## 1.3.0
 
 ### Minor Changes

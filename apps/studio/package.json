@@ -58,7 +58,7 @@
     "generate:assets": "npm run build && npm run generate:readme:toc",
     "generate:template-parameters": "ts-node ./scripts/template-parameters.ts",
     "generate:docker": "docker build -f Dockerfile --tag asyncapi/studio ../../",
-    "publish": "npm run generate:docker && semantic-release",
+    "release": "npm run generate:docker && semantic-release",
     "prepublishOnly": "npm run build && npm run generate:readme:toc"
   },
   "browserslist": {

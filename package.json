@@ -12,7 +12,7 @@
     "test": "turbo run test",
     "changeset": "changeset",
     "version-packages": "changeset version",
-    "publish": "turbo run build --filter=design-system^... && changeset publish",
+    "release": "turbo run build --filter=design-system^... && turbo run release -- --if-present",
     "build:studio": "turbo run build --no-cache --filter=studio...",
     "build:ds": "turbo run build --filter=design-system..."
   },

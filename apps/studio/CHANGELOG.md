@@ -1,5 +1,11 @@
 # @asyncapi/studio
 
+## 1.2.0
+
+### Minor Changes
+
+- 303c2a8: summalry
+
 ## 1.1.0
 
 ### Minor Changes

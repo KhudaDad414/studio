@@ -12,14 +12,15 @@
     "test": "turbo run test",
     "changeset": "changeset",
     "version-packages": "changeset version",
-    "release": "turbo run build --filter=design-system^... && turbo run release -- --if-present",
+    "release": "turbo run build --filter=!design-system && turbo run release -- --if-present",
     "build:studio": "turbo run build --no-cache --filter=studio...",
     "build:ds": "turbo run build --filter=design-system..."
   },
   "devDependencies": {
-    "semantic-release": "^21.0.3",
     "@semantic-release-plus/docker": "^3.1.2",
     "@semantic-release/github": "^8.0.6",
+    "semantic-release": "^21.0.6",
+    "semantic-release-monorepo": "^7.0.5",
     "turbo": "^1.10.2"
   },
   "workspaces": [

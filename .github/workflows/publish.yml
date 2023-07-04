@@ -27,9 +27,7 @@ jobs:
       - name: Create Release Pull Request
         uses: changesets/action@v1
         with:
-          publish: npm run release
+          publish: npm run publish
           version: npm run version-packages
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-          DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
-          DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME}}

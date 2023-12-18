@@ -8,7 +8,12 @@ interface ShareButtonProps {}
 
 export const ShareButton: React.FunctionComponent<ShareButtonProps> = () => {
   const { editorSvc } = useServices();
+  const [navigator, setNavigator] = React.useState<any>(null);
 
+  React.useEffect(() => {
+    setNavigator(window.navigator);
+  }, []);
+  
   const handleShare = () => {
     toast.promise(
       (async function () {

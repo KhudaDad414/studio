@@ -1,14 +1,11 @@
 import { AbstractService } from './abstract.service';
-
-import { KeyMod, KeyCode } from 'monaco-editor/esm/vs/editor/editor.api';
 import { DiagnosticSeverity } from '@asyncapi/parser/cjs';
-import { Range, MarkerSeverity } from 'monaco-editor/esm/vs/editor/editor.api';
 import toast from 'react-hot-toast';
 import fileDownload from 'js-file-download';
 
 import { appState, documentsState, filesState, settingsState } from '../state';
 
-import type * as monacoAPI from 'monaco-editor/esm/vs/editor/editor.api';
+//import * as monacoAPI from 'monaco-editor/esm/vs/editor/editor.api';
 import type { Diagnostic } from '@asyncapi/parser/cjs';
 import type { ConvertVersion } from '@asyncapi/converter';
 import type { File } from '../state/files.state';
@@ -23,18 +20,20 @@ export interface UpdateState {
 export class EditorService extends AbstractService {
   private created = false;
   private decorations: Map<string, string[]> = new Map();
-  private instance: monacoAPI.editor.IStandaloneCodeEditor | undefined;
+  private instance: any;
+  private monacoAPI: any;
 
   override onInit() {
     this.subcribeToDocuments();
   }
 
-  async onDidCreate(editor: monacoAPI.editor.IStandaloneCodeEditor) {
+  async onDidCreate(editor: any) {
     if (this.created) {
       return;
     }
     this.created = true;
     this.instance = editor;
+    this.monacoAPI = await import('monaco-editor/esm/vs/editor/editor.api')
 
     // parse on first run - only when document is undefined
     const document = documentsState.getState().documents.asyncapi;
@@ -46,14 +45,14 @@ export class EditorService extends AbstractService {
     
     // apply save command
     editor.addCommand(
-      KeyMod.CtrlCmd | KeyCode.KeyS,
+      this.monacoAPI.KeyMod.CtrlCmd | this.monacoAPI.KeyCode.KeyS,
       () => this.saveToLocalStorage(),
     );
     
     appState.setState({ initialized: true });
   }
 
-  get editor(): monacoAPI.editor.IStandaloneCodeEditor | undefined {
+  get editor(): any {
     return this.instance;
   }
 
@@ -289,8 +288,8 @@ export class EditorService extends AbstractService {
   }
 
   createMarkersAndDecorations(diagnostics: Diagnostic[] = []) {
-    const newDecorations: monacoAPI.editor.IModelDecoration[] = [];
-    const newMarkers: monacoAPI.editor.IMarkerData[] = [];
+    const newDecorations: any = [];
+    const newMarkers: any = [];
 
     diagnostics.forEach(diagnostic => {
       const { message, range, severity } = diagnostic;
@@ -299,7 +298,7 @@ export class EditorService extends AbstractService {
         newDecorations.push({
           id: 'asyncapi',
           ownerId: 0,
-          range: new Range(
+          range: new this.monacoAPI.Range(
             range.start.line + 1, 
             range.start.character + 1,
             range.end.line + 1,
@@ -326,7 +325,8 @@ export class EditorService extends AbstractService {
     return { decorations: newDecorations, markers: newMarkers };
   }
 
-  private getSeverity(severity: DiagnosticSeverity): monacoAPI.MarkerSeverity {
+  private getSeverity(severity: DiagnosticSeverity): any {
+    const { MarkerSeverity } = this.monacoAPI
     switch (severity) {
     case DiagnosticSeverity.Error: return MarkerSeverity.Error;
     case DiagnosticSeverity.Warning: return MarkerSeverity.Warning;

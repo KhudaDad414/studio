@@ -1,21 +1,15 @@
 import { AbstractService } from './abstract.service';
-
-import { loader } from '@monaco-editor/react';
-import { setDiagnosticsOptions } from 'monaco-yaml';
 import YAML from 'js-yaml';
 
 import { documentsState, filesState } from '../state';
-
-import type * as monacoAPI from 'monaco-editor/esm/vs/editor/editor.api';
-import type { DiagnosticsOptions as YAMLDiagnosticsOptions } from 'monaco-yaml';
 import type { SpecVersions } from '../types';
 import type { JSONSchema7 } from 'json-schema';
 
 export class MonacoService extends AbstractService {
   private jsonSchemaSpecs: Map<string, any> = new Map();
-  private jsonSchemaDefinitions: monacoAPI.languages.json.DiagnosticsOptions['schemas'] = [];
+  private jsonSchemaDefinitions: any = [];
   private actualVersion = 'X.X.X';
-  private monacoInstance!: typeof monacoAPI;
+  private monacoInstance!: any;
 
   override async onInit() {
     // load monaco instance
@@ -25,7 +19,7 @@ export class MonacoService extends AbstractService {
     // prepare JSON Schema specs and definitions for JSON/YAML language config
     this.prepareJSONSchemas();
     // load initial language config (for json and yaml)
-    this.setLanguageConfig(this.svcs.specificationSvc.latestVersion);
+    await this.setLanguageConfig(this.svcs.specificationSvc.latestVersion);
     // subscribe to document to update JSON/YAML language config
     this.subcribeToDocuments();
   }
@@ -42,7 +36,7 @@ export class MonacoService extends AbstractService {
     this.actualVersion = version;
   }
 
-  private setLanguageConfig(version: SpecVersions = this.svcs.specificationSvc.latestVersion) {
+  private async setLanguageConfig(version: SpecVersions = this.svcs.specificationSvc.latestVersion) {
     if (!this.monaco) {
       return;
     }
@@ -55,12 +49,13 @@ export class MonacoService extends AbstractService {
     }
 
     // yaml
-    setDiagnosticsOptions(options as YAMLDiagnosticsOptions);
+    const { setDiagnosticsOptions } = await import('monaco-yaml');
+    setDiagnosticsOptions(options as any);
   }
 
   private prepareLanguageConfig(
     version: SpecVersions,
-  ): monacoAPI.languages.json.DiagnosticsOptions {
+  ): any {
     const spec = this.jsonSchemaSpecs.get(version);
 
     return {
@@ -85,8 +80,9 @@ export class MonacoService extends AbstractService {
     if (process.env.NODE_ENV === 'test') {
       return;
     }
-    
+
     const monaco = this.monacoInstance = await import('monaco-editor');
+    const { loader } = await import('@monaco-editor/react');
     loader.config({ monaco });
   }
 
@@ -124,7 +120,7 @@ export class MonacoService extends AbstractService {
       }
 
       return {
-        uri, 
+        uri,
         schema,
       };
     });

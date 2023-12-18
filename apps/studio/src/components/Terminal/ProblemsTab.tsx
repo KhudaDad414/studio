@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { VscError, VscWarning, VscInfo, VscLightbulb, VscSearch, VscClose, VscSettingsGear } from 'react-icons/vsc';
 import { useModal } from '@ebay/nice-modal-react';
-import { DiagnosticSeverity } from '@asyncapi/parser/cjs';
+import { DiagnosticSeverity } from '@asyncapi/parser';
 
 import { SettingsModal } from '../Modals/Settings/SettingsModal';
 
@@ -11,7 +11,7 @@ import { debounce } from '../../helpers';
 import { useDocumentsState, useSettingsState } from '../../state';
 
 import type { FunctionComponent } from 'react';
-import type { Diagnostic } from '@asyncapi/parser/cjs';
+import type { Diagnostic } from '@asyncapi/parser';
 
 interface ProblemsTabProps {}
 

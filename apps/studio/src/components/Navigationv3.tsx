@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { useServices } from '../services';
 import { useDocumentsState, useFilesState } from '../state';
 
-import type { AsyncAPIDocumentInterface } from '@asyncapi/parser/cjs';
+import type { AsyncAPIDocumentInterface } from '@asyncapi/parser';
 
 interface NavigationProps {
   className?: string;

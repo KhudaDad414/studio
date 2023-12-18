@@ -1,4 +1,4 @@
-import type { OldAsyncAPIDocument as AsyncAPIDocument, OldChannel, OldOperation, OldMessage } from '@asyncapi/parser/cjs';
+import type { OldAsyncAPIDocument as AsyncAPIDocument, OldChannel, OldOperation, OldMessage } from '@asyncapi/parser';
 import type { Node, Edge } from 'reactflow';
 
 interface FileredChannel {
@@ -87,8 +87,8 @@ export function getElementsFromAsyncAPISpec(spec: AsyncAPIDocument): Array<{ nod
   };
 
   return [
-    ...publishNodes, 
-    { node: applicationNode } as { node: Node, edge: Edge }, 
+    ...publishNodes,
+    { node: applicationNode } as { node: Node, edge: Edge },
     ...subscribeNodes
   ];
 }

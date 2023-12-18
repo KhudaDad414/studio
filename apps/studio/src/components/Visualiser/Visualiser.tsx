@@ -4,7 +4,7 @@ import { FlowDiagram } from './FlowDiagram';
 
 import { useDocumentsState, useSettingsState, useOtherState, otherState } from '../../state';
 
-import { OldAsyncAPIDocument as AsyncAPIDocument, convertToOldAPI } from '@asyncapi/parser/cjs';
+import { OldAsyncAPIDocument as AsyncAPIDocument, convertToOldAPI } from '@asyncapi/parser';
 import type { FunctionComponent } from 'react';
 
 interface VisualiserProps {}

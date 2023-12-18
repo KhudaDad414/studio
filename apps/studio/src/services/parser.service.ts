@@ -1,6 +1,6 @@
 import { AbstractService } from './abstract.service';
 
-import { Parser, DiagnosticSeverity } from '@asyncapi/parser/cjs';
+import { Parser, DiagnosticSeverity } from '@asyncapi/parser';
 import { OpenAPISchemaParser } from '@asyncapi/openapi-schema-parser';
 import { AvroSchemaParser } from '@asyncapi/avro-schema-parser';
 import { ProtoBuffSchemaParser } from '@asyncapi/protobuf-schema-parser';
@@ -9,7 +9,7 @@ import { untilde } from '@asyncapi/parser/cjs/utils';
 import { isDeepEqual } from '../helpers';
 import { filesState, documentsState, settingsState } from '../state';
 
-import type { Diagnostic, ParseOptions } from '@asyncapi/parser/cjs';
+import type { Diagnostic, ParseOptions } from '@asyncapi/parser';
 import type { DocumentDiagnostics } from '../state/documents.state';
 import { SchemaParser } from '@asyncapi/parser';
 
@@ -54,7 +54,7 @@ export class ParserService extends AbstractService {
           valid: true,
         });
         return;
-      } 
+      }
     } catch (err: unknown) {
       console.log(err);
     }
@@ -107,7 +107,7 @@ export class ParserService extends AbstractService {
         diagnostic.message = 'File references are not yet supported in Studio';
       }
     });
-    
+
     const collections: DocumentDiagnostics = {
       original: diagnostics,
       filtered: [],

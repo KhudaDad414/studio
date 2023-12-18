@@ -1,7 +1,7 @@
 /// <reference types="react-scripts" />
 
 import type * as monacoAPI from 'monaco-editor/esm/vs/editor/editor.api';
-import type { AsyncAPIDocumentInterface, ParseOutput } from '@asyncapi/parser/cjs';
+import type { AsyncAPIDocumentInterface, ParseOutput } from '@asyncapi/parser';
 
 declare global {
   interface Window {

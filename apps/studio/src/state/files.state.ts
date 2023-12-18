@@ -1,7 +1,7 @@
-import create from 'zustand';
+import { create } from 'zustand';
 
 const schema =
-  localStorage.getItem('document') || `asyncapi: 3.0.0
+  typeof window !== 'undefined' ? localStorage.getItem('document') : `asyncapi: 3.0.0
 info:
   title: Streetlights Kafka API
   version: 1.0.0

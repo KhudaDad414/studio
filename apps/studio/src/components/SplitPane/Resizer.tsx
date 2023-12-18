@@ -1,9 +1,9 @@
 /* eslint-disable */
-// @ts-nocheck
+
 
 export const RESIZER_DEFAULT_CLASSNAME = 'Resizer';
 
-function Resizer(props) {
+function Resizer(props: any) {
   const {
     className,
     onClick,
@@ -11,7 +11,7 @@ function Resizer(props) {
     onMouseDown,
     onTouchEnd,
     onTouchStart,
-    resizerClassName,
+    resizerClassName = RESIZER_DEFAULT_CLASSNAME,
     split,
     style,
   } = props;
@@ -46,9 +46,5 @@ function Resizer(props) {
     />
   );
 }
-
-Resizer.defaultProps = {
-  resizerClassName: RESIZER_DEFAULT_CLASSNAME,
-};
 
 export default Resizer;

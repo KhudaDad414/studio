@@ -1,4 +1,4 @@
-import create from 'zustand';
+import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
 export type PanelsState = {
@@ -16,23 +16,23 @@ export type PanelsState = {
 }
 
 export const panelsState = create(
-  persist<PanelsState>(() => 
-    ({
-      show: {
-        activityBar: true,
-        statusBar: true,
-        primarySidebar: true,
-        secondarySidebar: true,
-        primaryPanel: true,
-        secondaryPanel: true,
-        contextPanel: true,
-      },
-      secondaryPanelType: 'template',
-    }), 
-  {
-    name: 'studio-panels',
-    getStorage: () => localStorage,
-  }
+  persist<PanelsState>(() =>
+  ({
+    show: {
+      activityBar: true,
+      statusBar: true,
+      primarySidebar: true,
+      secondarySidebar: true,
+      primaryPanel: true,
+      secondaryPanel: true,
+      contextPanel: true,
+    },
+    secondaryPanelType: 'template',
+  }),
+    {
+      name: 'studio-panels',
+      getStorage: () => localStorage,
+    }
   ),
 );
 

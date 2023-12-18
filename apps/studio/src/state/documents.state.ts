@@ -1,6 +1,6 @@
-import create from 'zustand';
+import { create } from 'zustand';
 
-import type { AsyncAPIDocumentInterface, Diagnostic, ParseOutput } from '@asyncapi/parser/cjs';
+import type { AsyncAPIDocumentInterface, Diagnostic, ParseOutput } from '@asyncapi/parser';
 
 export type DocumentDiagnostics = {
   original: Diagnostic[];
@@ -20,7 +20,7 @@ export type Document = {
 }
 
 export type DocumentsState = {
-  documents: Record<string, Document>; 
+  documents: Record<string, Document>;
 }
 
 export type DocumentsActions = {

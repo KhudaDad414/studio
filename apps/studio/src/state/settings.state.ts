@@ -19,7 +19,7 @@ export type SettingsState = {
 }
 
 export const settingsState = create(
-  persist<SettingsState>(() => 
+  persist<SettingsState>(() =>
     ({
       editor: {
         autoSaving: true,
@@ -35,7 +35,7 @@ export const settingsState = create(
       templates: {
         autoRendering: true,
       },
-    }), 
+    }),
   {
     name: 'studio-settings',
     getStorage: () => localStorage,

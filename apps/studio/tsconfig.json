@@ -36,7 +36,7 @@
   "include": [
     "src",
     ".next/types/**/*.ts"
-  ],
+, "app/components", "app/examples", "app/lib", "app/services", "app/state"  ],
   "exclude": [
     "node_modules"
   ]

@@ -237,10 +237,10 @@ export const filesState = create<FilesState & FilesActions>(set => ({
     asyncapi: {
       uri: 'asyncapi',
       name: 'asyncapi',
-      content: schema,
+      content: schema!!,
       from: 'storage',
       source: undefined,
-      language: schema.trimStart()[0] === '{' ? 'json' : 'yaml',
+      language: schema?.trimStart()[0] === '{' ? 'json' : 'yaml',
       modified: false,
       stat: {
         mtime: (new Date()).getTime(),

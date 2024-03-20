@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import dynamic from 'next/dynamic';
-import { debounce } from '../../helpers';
+import { debounce } from '../../lib';
 import { useServices } from '../../services';
 import { useFilesState, useSettingsState } from '../../state';
 

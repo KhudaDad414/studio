@@ -4,7 +4,7 @@ import fs from 'fs';
 import path from 'path';
 import { JSONSchema7 } from 'json-schema';
 
-const DESTINATION_JSON = path.join(__dirname, '../src/components/Modals/Generator/template-parameters.json');
+const DESTINATION_JSON = path.join(__dirname, '../app/components/Modals/Generator/template-parameters.json');
 const TEMPLATES: Record<string, string> = {
   '@asyncapi/dotnet-nats-template': '.NET Nats Project',
   '@asyncapi/go-watermill-template': 'GO Lang Watermill Project',
@@ -65,12 +65,12 @@ function serializeTemplateParameters(config: TemplateConfig): JSONSchema7 | unde
   const required: string[] = [];
   for (const parameter in configParameters) {
     const configParam = configParameters[String(parameter)];
-    
+
     const param = serializeParam(configParam);
     if (configParam.required) {
       required.push(parameter);
     }
-    
+
     parameters[String(parameter)] = param;
   }
 

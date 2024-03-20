@@ -7,7 +7,7 @@ import { SettingsModal } from '../Modals/Settings/SettingsModal';
 
 import { Tooltip } from '../common';
 import { useServices } from '../../services';
-import { debounce } from '../../helpers';
+import { debounce } from '../../lib';
 import { useDocumentsState, useSettingsState } from '../../state';
 
 import type { FunctionComponent } from 'react';

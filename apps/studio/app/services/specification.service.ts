@@ -7,7 +7,7 @@ import { ConvertToLatestModal } from '../components/Modals';
 
 import { documentsState, settingsState } from '../state';
 
-import type { SpecVersions } from '../types';
+import type { SpecVersions } from '../../src/types';
 
 export class SpecificationService extends AbstractService {
   private keySessionStorage = 'informed-about-latest';
@@ -21,7 +21,7 @@ export class SpecificationService extends AbstractService {
   }
 
   get latestVersion(): SpecVersions {
-    return  Object.keys(this.specs).pop() as SpecVersions;
+    return Object.keys(this.specs).pop() as SpecVersions;
   }
 
   getSpec(version: SpecVersions) {

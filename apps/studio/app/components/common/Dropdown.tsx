@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react';
 
-import { useOutsideClickCallback } from '../../helpers';
+import { useOutsideClickCallback } from '../../lib';
 
 import type { FunctionComponent, PropsWithChildren, ReactNode } from 'react';
 

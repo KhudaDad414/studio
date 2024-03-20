@@ -2,7 +2,7 @@ import { AbstractService } from './abstract.service';
 import YAML from 'js-yaml';
 
 import { documentsState, filesState } from '../state';
-import type { SpecVersions } from '../types';
+import type { SpecVersions } from '../../src/types';
 import type { JSONSchema7 } from 'json-schema';
 
 export class MonacoService extends AbstractService {

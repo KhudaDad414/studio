@@ -5,7 +5,7 @@ import { Navigationv3 } from './Navigationv3';
 import { Template } from './Template';
 import { VisualiserTemplate } from './Visualiser';
 
-import { debounce } from '../helpers';
+import { debounce } from '../lib';
 import { usePanelsState, useDocumentsState } from '../state';
 
 import type { FunctionComponent } from 'react';

@@ -4,7 +4,7 @@
 import React, { useEffect, useState } from 'react';
 import { StrictMode } from 'react';
 import { Provider as ModalsProvider } from '@ebay/nice-modal-react';
-import { createServices, Services, ServicesProvider } from '../src/services';
+import { createServices, Services, ServicesProvider } from './services';
 import { App}  from '../src/App';
 
 function configureMonacoEnvironment() {

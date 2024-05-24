@@ -1,4 +1,5 @@
 import '@asyncapi/studio-ui/styles.css'
+import 'json-schema-editor/styles.css'
 import '../src/styles/tailwind.output.css'
 
 export const parameters = {

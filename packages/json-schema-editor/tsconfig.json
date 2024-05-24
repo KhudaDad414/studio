@@ -1,0 +1,11 @@
+{
+  "include": ["src/**/*"],
+  "exclude": ["dist/"],
+  "compilerOptions": {
+    "moduleResolution": "Node",
+    "jsx": "react",
+    "lib": ["dom", "webworker", "es2017", "dom.iterable"],
+    "target": "es2017",
+    "esModuleInterop": true
+  }
+}

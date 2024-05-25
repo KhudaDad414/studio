@@ -22,6 +22,8 @@ import type {
   PrimitiveArrayNode,
   PrimitiveDictionaryNode,
 } from './types';
+import { cloneDeep, last, set } from 'lodash';
+import { JSONSchema } from '../components';
 
 export type ChildNode = RegularNode | ReferenceNode | MirroredSchemaNode;
 
@@ -101,6 +103,23 @@ export function isPropertyRequired(schemaNode: SchemaNode): boolean {
 
   return !!parent.required?.includes(schemaNode.subpath[schemaNode.subpath.length - 1]);
 }
+
+export const setPropertyRequired = (schema: JSONSchema, schemaNode: SchemaNode, required: boolean) => {
+  const { parent } = schemaNode
+  if (parent === null || !isRegularNode(parent) || schemaNode.subpath.length === 0) return schema
+  const { fragment } = parent
+  const title = last(schemaNode.path)
+  const requiredArray = parent.required || []
+  const isCurrentlyRequired = requiredArray.includes(title)
+  if (required && !isCurrentlyRequired) {
+    const newFragment = set(fragment, ["required"], [...requiredArray, title])
+    return set(cloneDeep(schema), parent.path, newFragment)
+  } else if (!required && isCurrentlyRequired) {
+    const newFragment = set(fragment, ["required"], requiredArray.filter((r) => r !== title))
+    return set(cloneDeep(schema), parent.path, newFragment)
+  }
+}
+
 
 function isRenderableNode(node: BooleanishNode | RegularNode): boolean {
   if (node.parent === null) return true;

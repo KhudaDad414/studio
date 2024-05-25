@@ -32,7 +32,7 @@ const JsonSchemaEditor: React.FC<JsonSchemaEditorProps> = ({ className, maxRefDe
 
   const jsonSchemaTreeRoot = React.useMemo(() => {
     const jsonSchemaTree = new JsonSchemaTree(schema, {
-      mergeAllOf: true,
+      mergeAllOf: false,
       refResolver: defaultResolver(schema),
       maxRefDepth,
     })

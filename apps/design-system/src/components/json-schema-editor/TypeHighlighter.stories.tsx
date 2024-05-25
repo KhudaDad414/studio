@@ -1,7 +1,6 @@
 import { StoryObj, Meta } from '@storybook/react'
 import { TypeHighlighter } from 'json-schema-editor'
 
-console.log(TypeHighlighter)
 const meta: Meta<typeof TypeHighlighter> = {
   component: TypeHighlighter,
   parameters: {

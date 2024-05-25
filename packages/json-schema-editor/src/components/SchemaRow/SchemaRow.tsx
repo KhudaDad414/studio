@@ -34,6 +34,15 @@ export function setPropertyTitle(schema: JSONSchema, schemaNode: SchemaNode, new
   return set(cloneDeep(schema), [...newPath, "x-asyncapi", "id"], getOriginalNodeId(schemaNode))
 }
 
+export function addNewProperty(schema: JSONSchema, schemaNode: SchemaNode) {
+  const newTitle = ""
+  const newPath = [...schemaNode.path,"properties", newTitle]
+  const newSchema = cloneDeep(schema)
+  set(newSchema, newPath, { type: "string" })
+  const randomId = Math.random().toString(36).substring(7)
+  return set(newSchema, [...newPath, "x-asyncapi", "id"], getOriginalNodeId(schemaNode, getOriginalNodeId(schemaNode.parent), randomId))
+ }
+
 export const SchemaRow: React.FunctionComponent<SchemaRowProps> = React.memo(
   ({ schemaNode, nestingLevel, parentNodeId, hideTitle }) => {
     const nodeId = getOriginalNodeId(schemaNode, parentNodeId)
@@ -41,7 +50,7 @@ export const SchemaRow: React.FunctionComponent<SchemaRowProps> = React.memo(
     const { types } = useNodeTypes(schemaNode)
 
     const childNodes = React.useMemo(
-      () => visibleChildren(schemaNode).sort((a, b) => getOriginalNodeId(a).localeCompare(getOriginalNodeId(b))),
+      () => visibleChildren(schemaNode).sort((a, b) => a.id.localeCompare(b.id)),
       [schemaNode]
     )
     const isCollapsible = childNodes.length > 0
@@ -62,8 +71,14 @@ export const SchemaRow: React.FunctionComponent<SchemaRowProps> = React.memo(
       onSchemaChange(changedSchema)
     }
 
+    const handleNewProperty = () => {
+      const changedSchema = addNewProperty(schema, schemaNode)
+      onSchemaChange(changedSchema)
+    }
+
     // we return the result here...
-    const title = last(schemaNode.subpath) || ""
+    const title = last(schemaNode.subpath)
+    console.log({titleL: title.length, title: title})
     const type = types.join("")
     if (isCollapsible) {
       return (
@@ -81,6 +96,9 @@ export const SchemaRow: React.FunctionComponent<SchemaRowProps> = React.memo(
                       onInput={handleTitleChange}
                       className="text-gray-50 max-w-fit text-xs leading-3"
                       value={title}
+                      autoFocus={title.length === 0}
+                      placeholder="name"
+                      
                     />
                   )}
                   <TypeHighlighter type={combiner || type} />
@@ -105,7 +123,7 @@ export const SchemaRow: React.FunctionComponent<SchemaRowProps> = React.memo(
                         />
                       )
                     })}
-                    <AddProperty />
+                    <AddProperty onClick={handleNewProperty} />
                   </div>
                 </div>
               </CollapsibleContent>
@@ -122,7 +140,9 @@ export const SchemaRow: React.FunctionComponent<SchemaRowProps> = React.memo(
               {!hideTitle && (
                 <FluidInput
                   className="text-gray-50 max-w-fit text-xs leading-3"
-                  value={title}
+                  placeholder='name'
+                  value={ title || ""}
+                  autoFocus={title?.length === 0}
                   onInput={handleTitleChange}
                 />
               )}

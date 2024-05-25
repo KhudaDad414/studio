@@ -3,7 +3,7 @@ import type { SchemaNode } from '@stoplight/json-schema-tree';
 import * as fnv from 'fnv-plus';
 
 // for easier debugging the values going into hash
-let SKIP_HASHING = true;
+let SKIP_HASHING = false;
 
 
 const hash = (value: string, skipHashing: boolean = SKIP_HASHING): string => {
@@ -21,7 +21,7 @@ export const getNodeId = (node: SchemaNode, parentId?: string): string => {
   return hash(['schema_property', parentId, String(key)].join('-'));
 };
 
-export const getOriginalNodeId = (node: SchemaNode, parentId?: string): string => {
+export const getOriginalNodeId = (node: SchemaNode, parentId?: string, salt = 'schema_property'): string => {
   // @ts-expect-error originalFragment does exist...
   const originalFragment = node.originalFragment;
   const nodeId = originalFragment?.['x-asyncapi']?.id;
@@ -32,5 +32,5 @@ export const getOriginalNodeId = (node: SchemaNode, parentId?: string): string =
 
   const key = node.path[node.path.length - 1];
 
-  return hash(['schema_property', parentId, String(key)].join('-'));
+  return hash([salt, parentId, String(key)].join('-'));
 };

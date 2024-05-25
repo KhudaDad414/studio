@@ -18,13 +18,6 @@ export const Default: Story = {
     schema: {
       type: "object",
       properties: {
-        name: {
-          type: "string",
-          description: "Please enter your name",
-        },
-        last: {
-          type: "string",
-        },
         gender: {
           anyOf: [
             {

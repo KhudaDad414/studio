@@ -16,7 +16,7 @@ export const TopLevelSchemaRow = ({ schemaNode }: { schemaNode: SchemaNode }) =>
   console.log(schemaNode)
   const { types } = useNodeTypes(schemaNode)
   const childNodes = React.useMemo(
-    () => visibleChildren(schemaNode).sort((a, b) => getOriginalNodeId(a).localeCompare(getOriginalNodeId(b))),
+    () => visibleChildren(schemaNode).sort((a, b) => a.id.localeCompare(b.id)),
     [schemaNode]
   )
   const nodeId = schemaNode.fragment?.["x-asyncapi"]?.id

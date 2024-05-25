@@ -8,23 +8,18 @@ export interface FluidInputProps
  
 const FluidInput = React.forwardRef<HTMLInputElement, FluidInputProps>(
   ({ className, type, onInput, value, ...props }, ref) => {
-    const [inputWidth, setInputWidth] = useState(`${typeof value === "string" ? value.length : ""}ch`);
-
-    const fluidInputHandler: React.ChangeEventHandler<HTMLInputElement> = (e) => {
-      setInputWidth(`${e.target.value.length}ch`);
-      onInput?.(e);
-    };
+    const width = `${typeof value === "string" && value.length > 0 ? value.length : 4}ch`
 
     return (
       <input
-        onInput={fluidInputHandler}
+        onInput={onInput}
         value={value}
         type={type}
         className={cn(
           "bg-transparent outline-none font-mono",
           className
         )}
-        style={{ width: inputWidth }}
+        style={{ width }}
         ref={ref}
         {...props}
       />

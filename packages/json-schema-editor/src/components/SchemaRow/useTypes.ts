@@ -1,78 +1,57 @@
-import { extractPointerFromRef, pointerToPath } from '@stoplight/json';
-import { isReferenceNode, isRegularNode, SchemaNode } from '@stoplight/json-schema-tree';
-import last from 'lodash/last.js';
-import * as React from 'react';
-
-import { isComplexArray, isNonEmptyParentNode } from '../../tree';
-import { printName } from '../../utils';
+import { isRegularNode, RegularNode, SchemaNode } from '@stoplight/json-schema-tree';
+import { ComplexArrayNode, isComplexArray, isNonEmptyParentNode, isPrimitiveArray } from '../../tree';
 
 
-function calculateNodeType(node: SchemaNode, isPlural: boolean): string {
-  const primitiveSuffix = isPlural ? 's' : '';
-    if (isRegularNode(node)) {
-      const realName = printName(node, { shouldUseRefNameFallback: true });
-      if (realName) {
-        return realName;
-      }
-      return node.primaryType !== null
-        ? node.primaryType + primitiveSuffix
-        : String(node.originalFragment.title || 'any');
-    }
-  if (isReferenceNode(node)) {
-    if (node.value) {
-      const value = extractPointerFromRef(node.value);
-      const lastPiece = !node.error && value ? last(pointerToPath(value)) : null;
-      if (typeof lastPiece === 'string') {
-        return lastPiece.split('.')[0];
+const getPrimitiveArrayType = (schemaNode: RegularNode) => {
+
+  const val = schemaNode.children?.reduce((mergedTypes, child) => {
+    if (mergedTypes === null) return null;
+    if (!isRegularNode(child)) return null;
+    if (child.types !== null && child.types.length > 0) {
+      for (const type of child.types) {
+        if (mergedTypes.includes(type)) continue;
+        else {
+          mergedTypes.push(type);
+        }
       }
     }
-    return '$ref' + primitiveSuffix;
+    return mergedTypes;
+  }, []) ?? null;
+
+if (val !== null && val.length > 0) {
+  return `array<${val.join(' or ')}>`;
+}
+
+return 'array';
+
+}
+
+const getComplexArrayType = (schemaNode: ComplexArrayNode) => {
+  const firstChild = schemaNode.children[0];
+  if (firstChild.primaryType) {
+      return `array<${firstChild.primaryType}>`;
+   }
+   
+   return 'array';
+}
+
+export const getCombiner = (schemaNode: SchemaNode) => {
+return isNonEmptyParentNode(schemaNode) && schemaNode.combiners?.length ? schemaNode.combiners[0] : null;
+}
+export const getNodeType = (schemaNode: SchemaNode) => {
+  const combiner = getCombiner(schemaNode);
+  if (combiner) return combiner
+  if (!isRegularNode(schemaNode)) return 'unknown';
+  if (isPrimitiveArray(schemaNode)) return getPrimitiveArrayType(schemaNode)
+  if (isComplexArray(schemaNode)) return getComplexArrayType(schemaNode)
+  
+  const regularTypes = schemaNode.types
+  if (regularTypes && regularTypes.length > 0) return regularTypes.join(' or ');
+  else if(getCombiner(schemaNode.parent)) {
+    const { parent } = schemaNode;
+    const parentTypes = isRegularNode(parent) ? parent.types : null;
+    if(parentTypes && parentTypes.length > 0) return parentTypes.join(' or ');
   }
 
-  return 'any';
+  return 'unknown';
 }
-
-function getType(node: SchemaNode): string {
-  return calculateNodeType(node, false)
-}
-
-function getArrayType(node: SchemaNode, combiner?: string): string {
-  const itemTitle = calculateNodeType(node, true);
-  const title = itemTitle !== 'any' ? `array ${combiner ? `(${combiner})` : null} <${itemTitle}>` : 'array';
-    return title;
-}
-
-/**
- * Enumerates the sub-schema type for a given node.
- *
- * Usually a node has one type. If a node is
- * a oneOf or anyOf combiner, the possible types are the sub-types of the
- * combiner.
- */
-export const useNodeTypes = (schemaNode: SchemaNode) => {
-  const types: string[] = React.useMemo(() => {
-    // handle flattening of arrays that contain oneOfs, same logic as below
-    if (
-      isComplexArray(schemaNode) &&
-      isNonEmptyParentNode(schemaNode.children[0]) &&
-      shouldShowChildSelector(schemaNode.children[0])
-    ) {
-      return schemaNode.children[0].children.map(child =>
-        getArrayType(child, schemaNode.children[0].combiners?.[0]),
-      );
-    }
-
-    // if current node is a combiner, offer its children
-    if (isNonEmptyParentNode(schemaNode) && shouldShowChildSelector(schemaNode)) {
-      return schemaNode.children.map(getType);
-    }
-    // regular node, single type
-    return [getType(schemaNode)];
-  }, [schemaNode]);
-
-
-  return { types };
-};
-
-const shouldShowChildSelector = (schemaNode: SchemaNode) =>
-  isNonEmptyParentNode(schemaNode) && ['anyOf', 'oneOf'].includes(schemaNode.combiners?.[0] ?? '');

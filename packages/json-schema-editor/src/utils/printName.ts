@@ -5,10 +5,7 @@ import upperFirst from 'lodash/upperFirst.js';
 import { isNonNullable } from '../guards/isNonNullable';
 import {
   isComplexArray,
-  isComplexDictionary,
-  isDictionaryNode,
   isPrimitiveArray,
-  isPrimitiveDictionary,
 } from '../tree';
 import { getApplicableFormats } from './getApplicableFormats';
 
@@ -32,33 +29,20 @@ function printFlattenedName(
     return schemaNode.title ?? (shouldUseRefNameFallback ? getNodeNameFromOriginalRef(schemaNode) : undefined);
   }
 
-  if (schemaNode.children.length === 1 && isReferenceNode(schemaNode.children[0])) {
-    const value = `$ref(${schemaNode.children[0].value})`;
-    return isDictionaryNode(schemaNode) ? `dictionary<string, ${value}>` : `${value}<>`;
-  }
+  const format = 'array<%s>';
 
-  const format = isDictionaryNode(schemaNode) ? 'dictionary<string, %s>' : 'array<%s>';
-
-  if (isPrimitiveArray(schemaNode) || isPrimitiveDictionary(schemaNode)) {
-    const val =
-      schemaNode.children?.reduce<(SchemaNodeKind | `${SchemaNodeKind}<${string}>`)[] | null>((mergedTypes, child) => {
+  if (isPrimitiveArray(schemaNode)) {
+    const val = schemaNode.children?.reduce((mergedTypes, child) => {
         if (mergedTypes === null) return null;
-
         if (!isRegularNode(child)) return null;
-
         if (child.types !== null && child.types.length > 0) {
-          const formats = getApplicableFormats(child);
           for (const type of child.types) {
             if (mergedTypes.includes(type)) continue;
-
-            if (formats !== null && formats[0] === type) {
-              mergedTypes.push(`${type}<${formats[1]}>`);
-            } else {
+            else {
               mergedTypes.push(type);
             }
           }
         }
-
         return mergedTypes;
       }, []) ?? null;
 
@@ -66,21 +50,16 @@ function printFlattenedName(
       return format.replace('%s', val.join(' or '));
     }
 
-    return isDictionaryNode(schemaNode) ? 'dictionary<string, any>' : 'array';
+    return 'array';
   }
 
-  if (isComplexArray(schemaNode) || isComplexDictionary(schemaNode)) {
+  if (isComplexArray(schemaNode)) {
     const firstChild = schemaNode.children[0];
-    if (firstChild.title) {
-      return format.replace('%s', firstChild.title);
-    } else if (shouldUseRefNameFallback && getNodeNameFromOriginalRef(schemaNode)) {
-      return format.replace('%s', getNodeNameFromOriginalRef(schemaNode) ?? 'any');
-    } else if (firstChild.primaryType) {
+   if (firstChild.primaryType) {
       return format.replace('%s', firstChild.primaryType);
-    } else if (firstChild.combiners?.length) {
-      return format.replace('%s', firstChild.combiners.join(' '));
     }
-    return isComplexArray(schemaNode) ? 'array' : format.replace('%s', 'any');
+    
+    return 'array';
   }
 
   return undefined;

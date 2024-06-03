@@ -81,16 +81,11 @@ export function isArrayNode(node: SchemaNode): node is ArrayNode {
 
 /**
  * Returns the children of `node` that should be displayed in a viewer or
- * editor. Defaults to `node.children`, except for Arrays that get special
- * handling (flattening).
+ * editor. Defaults to `node.children`.
  */
 export function visibleChildren(node: SchemaNode): SchemaNode[] {
   if (!isRegularNode(node) || isPrimitiveArray(node) || isPrimitiveDictionary(node)) {
     return [];
-  }
-  if (isComplexArray(node) || isComplexDictionary(node)) {
-    // flatten the tree here, and show the properties of the item type directly
-    return node.children[0].children ?? [];
   }
   return node.children ?? [];
 }
@@ -104,21 +99,6 @@ export function isPropertyRequired(schemaNode: SchemaNode): boolean {
   return !!parent.required?.includes(schemaNode.subpath[schemaNode.subpath.length - 1]);
 }
 
-export const setPropertyRequired = (schema: JSONSchema, schemaNode: SchemaNode, required: boolean) => {
-  const { parent } = schemaNode
-  if (parent === null || !isRegularNode(parent) || schemaNode.subpath.length === 0) return schema
-  const { fragment } = parent
-  const title = last(schemaNode.path)
-  const requiredArray = parent.required || []
-  const isCurrentlyRequired = requiredArray.includes(title)
-  if (required && !isCurrentlyRequired) {
-    const newFragment = set(fragment, ["required"], [...requiredArray, title])
-    return set(cloneDeep(schema), parent.path, newFragment)
-  } else if (!required && isCurrentlyRequired) {
-    const newFragment = set(fragment, ["required"], requiredArray.filter((r) => r !== title))
-    return set(cloneDeep(schema), parent.path, newFragment)
-  }
-}
 
 
 function isRenderableNode(node: BooleanishNode | RegularNode): boolean {

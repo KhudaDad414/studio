@@ -1,34 +1,41 @@
 import { isRegularNode, RegularNode, SchemaNode } from "@stoplight/json-schema-tree"
 import * as React from "react"
 
-import { isDictionaryNode, visibleChildren } from "../../tree"
+import { isArrayNode, visibleChildren } from "../../tree"
 import { ChevronDownIcon } from "@asyncapi/studio-ui/icons"
-import { SchemaRow, SchemaRowProps } from "./SchemaRow"
-import { useNodeTypes } from "./useTypes"
+import { addNewProperty, SchemaRow } from "./SchemaRow"
+import { getCombiner, getNodeType } from "./useTypes"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@radix-ui/react-collapsible"
 import { Separator } from "../ui/separator"
 import AddProperty from "../AddPropertyButton"
 import { TypeHighlighter } from "../TypeHighlighter"
 import { getOriginalNodeId } from "../../hash"
+import { useSchemaStore } from '../../state'
 
 const nestingLevel = 0
 export const TopLevelSchemaRow = ({ schemaNode }: { schemaNode: SchemaNode }) => {
-  console.log(schemaNode)
-  const { types } = useNodeTypes(schemaNode)
+
+  const type = getNodeType(schemaNode)
   const childNodes = React.useMemo(
-    () => visibleChildren(schemaNode).sort((a, b) => a.id.localeCompare(b.id)),
+    () => visibleChildren(schemaNode),
     [schemaNode]
   )
   const nodeId = schemaNode.fragment?.["x-asyncapi"]?.id
+  const { setSchema, schema } = useSchemaStore()
+  
+  const handleNewProperty = () => {
+    const changedSchema = addNewProperty(schema, schemaNode)
+    setSchema(changedSchema)
+  }
   // regular objects are flattened at the top level
-  if (isRegularNode(schemaNode) && isPureObjectNode(schemaNode)) {
+  if ((isRegularNode(schemaNode) && isPureObjectNode(schemaNode)) || (isArrayNode(schemaNode))) {
     return (
       <Collapsible className="flex flex-col justify-start grow gap-2" defaultOpen>
         <div className="flex items-center justify-start gap-1">
           <CollapsibleTrigger className="flex items-center">
             <ChevronDownIcon className="w-3 h-3 text-gray-800 hover:text-gray-500" />
           </CollapsibleTrigger>
-          <TypeHighlighter type={types[0]} />
+          <TypeHighlighter type={type} />
         </div>
         <CollapsibleContent>
           <div className="flex grow text-xs leading-3">
@@ -38,16 +45,18 @@ export const TopLevelSchemaRow = ({ schemaNode }: { schemaNode: SchemaNode }) =>
             <div className="flex flex-col grow gap-2">
               {childNodes.length > 0 &&
                 childNodes.map((childNode: SchemaNode) => {
+                  console.log({ childNode: schemaNode.children })
                   return (
                     <SchemaRow
                       nestingLevel={nestingLevel + 1}
                       schemaNode={childNode}
+                      hideTitle={isArrayNode(schemaNode)}
                       parentNodeId={nodeId}
                       key={getOriginalNodeId(childNode, nodeId)}
                     />
                   )
                 })}
-              <AddProperty />
+              <AddProperty onClick={handleNewProperty} />
             </div>
           </div>
         </CollapsibleContent>
@@ -55,7 +64,8 @@ export const TopLevelSchemaRow = ({ schemaNode }: { schemaNode: SchemaNode }) =>
     )
   }
 
-  if (isRegularNode(schemaNode) && types.length > 1) {
+  const combiner = getCombiner(schemaNode)
+  if (isRegularNode(schemaNode) && combiner) {
     const combiner = isRegularNode(schemaNode) && schemaNode.combiners?.length ? schemaNode.combiners[0] : null
 
     return (
@@ -82,7 +92,7 @@ export const TopLevelSchemaRow = ({ schemaNode }: { schemaNode: SchemaNode }) =>
                     key={getOriginalNodeId(childNode, nodeId)}
                   />
                 ))}
-              <AddProperty />
+              <AddProperty onClick={handleNewProperty}/>
             </div>
           </div>
         </CollapsibleContent>
@@ -92,11 +102,11 @@ export const TopLevelSchemaRow = ({ schemaNode }: { schemaNode: SchemaNode }) =>
 
   return (
     <>
-      <SchemaRow schemaNode={schemaNode} nestingLevel={0} />
+      <TypeHighlighter type={type} />
     </>
   )
 }
 
-function isPureObjectNode(schemaNode: RegularNode) {
-  return schemaNode.primaryType === "object" && schemaNode.types?.length === 1 && !isDictionaryNode(schemaNode)
+export function isPureObjectNode(schemaNode: RegularNode) {
+  return schemaNode.primaryType === "object" && schemaNode.types?.length === 1
 }

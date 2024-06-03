@@ -21,7 +21,8 @@ export {
   XMarkIcon,
   ChevronDownIcon,
   ChevronUpIcon,
-  CheckIcon
+  CheckIcon,
+  LinkIcon
 } from '@heroicons/react/24/outline'
 
 export { default as AMQPIcon } from './AMQPIcon'

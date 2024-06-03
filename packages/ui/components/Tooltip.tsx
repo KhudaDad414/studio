@@ -1,4 +1,3 @@
-import React from 'react'
 import * as RadixTooltip from '@radix-ui/react-tooltip'
 import type { TooltipContentProps } from '@radix-ui/react-tooltip'
 

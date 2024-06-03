@@ -1,4 +1,4 @@
-import { SchemaTree as JsonSchemaTree } from "@stoplight/json-schema-tree"
+import { SchemaTree as JsonSchemaTree, isMirroredNode } from "@stoplight/json-schema-tree"
 import * as React from "react"
 import { shouldNodeBeIncluded } from "../tree/utils"
 import { TopLevelSchemaRow } from "./SchemaRow"
@@ -7,6 +7,7 @@ import { JSONSchema4, JSONSchema6, JSONSchema7 } from "json-schema"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./Tabs"
 import { Separator } from "./ui/separator"
 import { useState } from "react"
+import { useSchemaStore } from '../state'
 
 export type JSONSchema = JSONSchema4 | JSONSchema6 | JSONSchema7
 
@@ -17,18 +18,13 @@ export type JsonSchemaEditorProps = {
   maxRefDepth?: number
 }
 
-export const SchemaContext = React.createContext({
-  schema: {} as JSONSchema,
-  onSchemaChange: (schema: JSONSchema) => {},
-})
-
 const JsonSchemaEditor: React.FC<JsonSchemaEditorProps> = ({ className, maxRefDepth, ...props }) => {
-  const [schema, onSchemaChange] = useState<JSONSchema>(props.schema)
+  const { schema, setSchema } = useSchemaStore();
 
-  const schemaChangeHandler = (schema: JSONSchema) => {
-    onSchemaChange(schema)
-    props.onSchemaChange?.(schema)
-  }
+  React.useEffect(() => {
+    setSchema(props.schema)
+  }, [props.schema])
+
 
   const jsonSchemaTreeRoot = React.useMemo(() => {
     const jsonSchemaTree = new JsonSchemaTree(schema, {
@@ -38,13 +34,17 @@ const JsonSchemaEditor: React.FC<JsonSchemaEditorProps> = ({ className, maxRefDe
     })
 
     jsonSchemaTree.walker.hookInto("filter", (node) => {
-      return shouldNodeBeIncluded(node)
+      const isCircular = isMirroredNode(node)
+      if(isCircular) console.error("Your Schema has circular references, this is not supported yet. It will be ignored.")
+      return shouldNodeBeIncluded(node) && !isCircular
     })
     jsonSchemaTree.populate()
 
     return jsonSchemaTree.root
   }, [schema, maxRefDepth])
 
+  if(Object.keys(schema).length < 1) return null
+  
   return (
     <div className={className}>
       <div>
@@ -55,13 +55,11 @@ const JsonSchemaEditor: React.FC<JsonSchemaEditorProps> = ({ className, maxRefDe
             <TabsTrigger value="examples">Examples</TabsTrigger>
           </TabsList>
           <Separator className="mb-1" />
-          <SchemaContext.Provider value={{ schema, onSchemaChange: schemaChangeHandler }}>
             <TabsContent value="visual_editor">
               <TopLevelSchemaRow schemaNode={jsonSchemaTreeRoot.children[0]} />
             </TabsContent>
             <TabsContent value="code_editor">Code Editor</TabsContent>
             <TabsContent value="examples">Examples</TabsContent>
-          </SchemaContext.Provider>
         </Tabs>
         <div className="m-2"></div>
       </div>

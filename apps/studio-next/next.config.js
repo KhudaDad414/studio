@@ -35,20 +35,7 @@ const nextConfig = {
     );
 
     return config
-  },
-  async headers() {
-    return [
-      {
-        source: '/',
-        headers: [
-          {
-            key: 'Netlify-CDN-Cache-Control',
-            value: 'public, max-age=36400, must-revalidate',
-          },
-        ],
-      },
-    ]
-  },
+  }
 }
 
 module.exports = nextConfig

@@ -42,12 +42,8 @@ const nextConfig = {
         source: '/',
         headers: [
           {
-            key: 'CDN-Cache-Control',
+            key: 'Netlify-CDN-Cache-Control',
             value: 'public, max-age=36400, must-revalidate',
-          },
-          {
-            key: 'Cache-Control',
-            value: 'public, max-age=0, must-revalidate',
           },
         ],
       },
